@@ -13,6 +13,7 @@ from multiprocessing import connection
 import pymongo
 import os
 from dotenv import load_dotenv
+import csv
 
 load_dotenv()
 
@@ -24,18 +25,33 @@ client = pymongo.MongoClient(MONGO_URI)
 
 client.list_database_names()
 
-database_name   = "Student_database"
-student_db      = client[database_name]
-collection_name = "Student Information"
-collection      = student_db[collection_name]
+database_name   = "housilon_dev"
+housilon_dev      = client[database_name]
+collection_name = "hn_house_sample"
+collection      = housilon_dev[collection_name]
+
+def csv_dict_list():
+     
+    # Open variable-based csv, iterate over the rows and map values to a list of dictionaries containing key/value pairs
+
+    reader = csv.DictReader(open("/home/elakia/tact/data-to-mongodb/100_rows.csv", 'r'))
+    dict_list = []
+    for line in reader:
+        dict_list.append(line)
+        
+    # print(dict_list)
+    
+    return dict_list
+ 
 
 def insert_one(document):
     collection.insert_one(document)
     return "successful inserted"
 
-def insert_many(items):
-
-    collection.insert_many(items)
+def insert_many():
+    result = csv_dict_list()
+    collection.insert_many(result)
+    print("inserted")
     return "successful inserted many"
 
 def query_one(query):
@@ -81,61 +97,64 @@ def delete_many(query_delete_items):
 
 def startpy():
 
-    document = {
-        "Name"  : "Raji",
-        "Reg_No": 1234,
-        "Branch": "IT"
-    }
+    csv_dict_list()
+    insert_many()
+
+    # document = {
+    #     "Name"  : "Raji",
+    #     "Reg_No": 1234,
+    #     "Branch": "IT"
+    # }
 
 
-    insert_one(document)
+    # insert_one(document)
 
-    items = [{
-        "Name"  : "Ram",
-        "Reg_No": 6234,
-        "Branch": "CSE"
-    },
-    {
-        "Name"  : "latha",
-        "Reg_No": 7892,
-        "Branch": "ECE"
-    },
-    {
-        "Name"  : "Sai",
-        "Reg_No": 4534,
-        "Branch": "EEE"
-    }]
+    # items = [{
+    #     "Name"  : "Ram",
+    #     "Reg_No": 6234,
+    #     "Branch": "CSE"
+    # },
+    # {
+    #     "Name"  : "latha",
+    #     "Reg_No": 7892,
+    #     "Branch": "ECE"
+    # },
+    # {
+    #     "Name"  : "Sai",
+    #     "Reg_No": 4534,
+    #     "Branch": "EEE"
+    # }]
 
-    insert_many(items)
+    # insert_many(items)
 
-    query = {
-        "Name" : "Raji"
-    }
+    # query = {
+    #     "Name" : "Raji"
+    # }
 
-    query_one(query)
+    # query_one(query)
 
-    query_items ={
-        "Branch" : "ECE"
-    }
+    # query_items ={
+    #     "Branch" : "ECE"
+    # }
 
-    query_many(query_items)
+    # query_many(query_items)
 
-    query_reg={
-        "Reg_No":{"$eq":1234}
-        }
+    # query_reg={
+    #     "Reg_No":{"$eq":1234}
+    #     }
 
-    query_particular(query_reg)
+    # query_particular(query_reg)
 
-    query_update_reg={"Reg_No":{"$eq":1234}}
-    new_data={'$set':{"Name":'Ramesh'}}
-    update(query_update_reg,new_data)
+    # query_update_reg={"Reg_No":{"$eq":1234}}
+    # new_data={'$set':{"Name":'Ramesh'}}
+    # update(query_update_reg,new_data)
 
-    query_delete_reg={"Reg_No":1234}
-    delete_one(query_delete_reg)
+    # query_delete_reg={"Reg_No":1234}
+    # delete_one(query_delete_reg)
 
-    query_delete_items = {
-        "Branch" : "ECE"
-    }
-    delete_many(query_delete_items)
+    # query_delete_items = {
+    #     "Branch" : "ECE"
+    # }
+    # delete_many(query_delete_items)
 
 startpy()
