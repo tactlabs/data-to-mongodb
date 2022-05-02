@@ -17,7 +17,7 @@ import csv
 
 load_dotenv()
 
-MONGO_URI = os.environ.get("MONGO_URL")
+MONGO_URI = os.environ.get("MONGO_URI")
 
 print(MONGO_URI)
 
@@ -30,11 +30,13 @@ housilon_dev      = client[database_name]
 collection_name = "hn_house_sample"
 collection      = housilon_dev[collection_name]
 
-def csv_dict_list():
+file_path =  os.environ.get("FILE_NAME")
+
+def csv_dict_list(file_path):
      
     # Open variable-based csv, iterate over the rows and map values to a list of dictionaries containing key/value pairs
 
-    reader = csv.DictReader(open("/home/elakia/tact/data-to-mongodb/100_rows.csv", 'r'))
+    reader = csv.DictReader(open("file_path", 'r'))
     dict_list = []
     for line in reader:
         dict_list.append(line)
@@ -48,8 +50,8 @@ def insert_one(document):
     collection.insert_one(document)
     return "successful inserted"
 
-def insert_many():
-    result = csv_dict_list()
+def insert_many(file_path):
+    result = csv_dict_list(file_path)
     collection.insert_many(result)
     print("inserted")
     return "successful inserted many"
@@ -97,8 +99,8 @@ def delete_many(query_delete_items):
 
 def startpy():
 
-    csv_dict_list()
-    insert_many()
+    #csv_dict_list()
+    insert_many(file_path)
 
     # document = {
     #     "Name"  : "Raji",
