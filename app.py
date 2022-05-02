@@ -14,6 +14,7 @@ import pymongo
 import os
 from dotenv import load_dotenv
 import csv
+import json
 
 load_dotenv()
 
@@ -32,26 +33,47 @@ collection      = housilon_dev[collection_name]
 
 file_path =  os.environ.get("FILE_NAME")
 
-def csv_dict_list(file_path):
+print(file_path)
+
+FILEPATH = 'housilon-sample.json'
+
+def get_json_data():
+
+    with open(FILEPATH) as json_file:
+        data = json.load(json_file)
+
+    return data
+
+def store_json_data(data):
+
+    with open(FILEPATH, 'w') as outfile:
+        json.dump(data, outfile)
+
+def csv_dict_list():
      
     # Open variable-based csv, iterate over the rows and map values to a list of dictionaries containing key/value pairs
-
-    reader = csv.DictReader(open("file_path", 'r'))
+ 
+    reader = csv.DictReader(open("/home/elakia/tact/data-to-mongodb/100_rows.csv", 'r'))
     dict_list = []
     for line in reader:
         dict_list.append(line)
-        
-    # print(dict_list)
-    
+    #print(dict_list)
     return dict_list
- 
+
+def get_all_data():
+
+    data = get_json_data() 
+
+    # print(data)
+    return data
+    
 
 def insert_one(document):
     collection.insert_one(document)
     return "successful inserted"
 
-def insert_many(file_path):
-    result = csv_dict_list(file_path)
+def insert_many(result):
+
     collection.insert_many(result)
     print("inserted")
     return "successful inserted many"
@@ -99,8 +121,11 @@ def delete_many(query_delete_items):
 
 def startpy():
 
-    #csv_dict_list()
-    insert_many(file_path)
+    data = csv_dict_list()
+    store_json_data(data)
+    result = get_all_data()
+
+    insert_many(result)
 
     # document = {
     #     "Name"  : "Raji",
