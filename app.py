@@ -15,6 +15,7 @@ import os
 from dotenv import load_dotenv
 import csv
 import json
+import pprint
 
 load_dotenv()
 
@@ -144,21 +145,21 @@ def json_variable_getting(hn):
 
         print("json_variable_getting | house_id : 1")
 
-        # new_data={ '$set' : {
-        #     "end_date"          : hn["listings_0_end_date"],
-        # 	"event"             : hn["listings_0_event"],
-        # 	"house_id"          : hn["house_house_id"],
-        # 	"listing_board_id"  : hn["listings_0_listing_board_id"],
-        # 	"sold_price"        : hn["sold_price"],
-        # 	"start_date"        : hn["listings_0_start_date"],
-        # 	"update_at"         : hn["listings_0_update_at"],
+        new_data={ '$set' : {
+            "end_date"          : hn["listings_0_end_date"],
+        	"event"             : hn["listings_0_event"],
+        	"house_id"          : hn["house_house_id"],
+        	"listing_board_id"  : hn["listings_0_listing_board_id"],
+        	"sold_price"        : hn["sold_price"],
+        	"start_date"        : hn["listings_0_start_date"],
+        	"update_at"         : hn["listings_0_update_at"],
 
-        # }	
-        # }
+        }	
+        }
 
-        # present_data=collection.find_one(result)
-        # collection.update_one(present_data,new_data)
-        # print("successfully updated ")
+        present_data=collection.find_one(result)
+        collection.update_one(present_data,new_data)
+        print("successfully updated ")
 
 
         new_data_house_detail={
@@ -207,13 +208,28 @@ def json_variable_getting(hn):
         collection_property_type.update_one(present_data,new_data_property_type)
         print("successfully updated ")
 
+    return
 
-    pass
+def get_single_data(house_id):
+
+    data = get_json_data() 
+
+    # if( house_id in data["house_house_id"]):
+    pprint(data)
+
+    # print(data)
+    return None
+
+
 
 def startpy():
 
     # data = csv_dict_list()
     # store_json_data(data)
+    for i in range(1,100):
+        house_id = str(i)
+        print(type(house_id))
+        get_single_data(house_id)
   
     hn = {
         "estimated_price": "",
@@ -864,7 +880,7 @@ def startpy():
         "url": "https://housesigma.com/web/en/house/Vwod7vrNRpo75mGN/162-May-Ave-Richmond-Hill-L4C3S6-N5483762"
     }
 
-    json_variable_getting(hn)
+    # json_variable_getting(hn)
 
 
     # result = get_all_data()
